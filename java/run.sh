@@ -1,27 +1,48 @@
-libraryPathList=$(echo $LD_LIBRARY_PATH | tr ':' '\n')
+# libraryPathList=$(echo $LD_LIBRARY_PATH | tr ':' '\n')
+log=petraCipherJava.log
+
+initialize() {
+    currentDir=$(pwd)
+    echo "[info] Add the '${currentDir}' and '.' to the [ LD_LIBRARY_PATH ] path.."
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${currentDir}:.
+
+    echo "[info] Add the '${currentDir}/PetraCipherAPI.jar' and '.' to the [ CLASSPATH ]"
+    echo ""
+    export CLASSPATH=${CLASSPATH}:${currentDir}/PetraCipherAPI.jar:.
+}
 
 getPathToFile() {
     [ $# -lt "1" ] && exit 1
     fileName=${1}
     environmentName=${2:-PATH}
+    includesFileName=${3:-false}
 
-    pathList=$(env | awk -F "=" '{ if ($1=="'"${environmentName}"'") print $2}' | tr ':' '\n')
+    elementList=$(env | awk -F "=" '{ if ($1=="'"${environmentName}"'") print $2}' | tr ':' '\n')
 
-    hasLibrary=false
-    for _path in ${pathList}; do
-        count=$(find ${_path} -name ${fileName} | wc -l)
-        if [ ${count} -ne "0" ]; then
-            hasLibrary=true
-            libraryPath=${_path}
-            break
+    hasElement=false
+    for element in ${elementList}; do
+        count=$(find ${element} -name ${fileName} | wc -l)
+        if $includesFileName; then
+            if [ "${fileName}" == "$(basename ${element})" ]; then
+                hasElement=true
+                hasElementPath=${element}
+                break
+            fi
+        else
+            if [ ${count} -ne "0" ]; then
+                hasElement=true
+                hasElementPath=${element}
+                break
+            fi
         fi
+
     done
 
     # return string
-    echo "${libraryPath}"
+    echo "${hasElementPath}"
 
     # return code 0:success, 1:failed
-    if $hasLibrary; then
+    if $hasElement; then
         return 0
     else
         return 1
@@ -30,14 +51,15 @@ getPathToFile() {
 
 libraryCheck() {
     libraryName=libpcjapi.so
-    hasLibrary=false
-    libraryPath=$(getPathToFile ${libraryName} LD_LIBRARY_PATH)
+    environmentName=LD_LIBRARY_PATH
+
+    libraryPath=$(getPathToFile ${libraryName} ${environmentName})
 
     if [ $? -eq "1" ]; then
-        echo "not found 'libpcjapi.so' library in LD_LIBRARY_PATH [failed]"
+        echo "[failed] not found '${libraryName}' library in ${environmentName}"
         return 1
     else
-        echo "Found library '${libraryName}' in path '${libraryPath}' [Done]"
+        echo "[OK] Use [ ${libraryName} ] in path [ ${libraryPath} ]"
     fi
 
     return 0
@@ -46,63 +68,35 @@ libraryCheck() {
 javaclassCheck() {
     javaclassName=PetraCipherAPI.jar
     makeScript=make_jar.sh
+    environmentName=CLASSPATH
 
     # Create PetraCipherAPI.jar file if it does not exist.
     if [ ! -f "${javaclassName}" ]; then
-        echo "Failed to find file '${javaclassName}'."
-        echo "Runs file generation."
         sh ${makeScript}
     fi
 
     # Terminate script if PetraCipherAPI.jar file creation fails
     if [ $? -ne "0" ]; then
-        echo "'${javaclassName}' file generate failed"
+        echo "[failed] [ ${javaclassName} ] file generate failed"
         return 1
     fi
 
     #Verify that the PetraCipherAPI.jar file is declared in CLASSPATH
     hasClass=false
-    classPathList=$(env | awk -F "=" '{ if ($1=="CLASSPATH") print $2}' | tr ':' '\n')
-    for _classPath in ${classPathList}; do
-        if [ "${javaclassName}" == "$(basename ${_classPath})" ]; then
-            hasClass=true
-            break
-        fi
-    done
-
-    # Add if not in CLASSPATH
-    if ! $hasClass; then
-        export CLASSPATH=./${javaclassName}:.:$CLASSPATH
+    classPath=$(getPathToFile ${javaclassName} ${environmentName} true)
+    if [ $? -eq "1" ]; then
+        echo "[failed] not found [ ${javaclassName} ] in [ ${environmentName} ]"
+        echo ""
+        return 1
     else
-        echo "Found classfile '${javaclassName}' in path '${libraryPath}' [Done]"
-        return 0
+        echo "[OK] Use [ ${javaclassName} ] in path [ ${classPath} ]"
     fi
 
-    # Secondary Search
-    hasClass=false
-    classPathList=$(env | awk -F "=" '{ if ($1=="CLASSPATH") print $2}' | tr ':' '\n')
-    for _classPath in ${classPathList}; do
-        if [ "${javaclassName}" == "$(basename ${_classPath})" ]; then
-            hasClass=true
-            break
-        fi
-    done
-
-    if ! $hasClass; then
-        echo "test faield"
-        exit 1
-    fi
-
-    echo "Found classfile '${javaclassName}' in path '${libraryPath}' [Done]"
     return 0
 }
 
 main() {
-    # path=$(getPathToFile test)
-
-    # echo "? : ${?}"
-    # echo $path
-    # [ !${?} ] && echo "is null"
+    initialize
 
     libraryCheck
     [ $? -ne "0" ] && exit 0

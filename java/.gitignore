@@ -1,3 +1,4 @@
 PetraCipherAPI.jar
 *.class
 *.so
+*.log
