@@ -1,4 +1,4 @@
-# libraryPathList=$(echo $LD_LIBRARY_PATH | tr ':' '\n')
+source tools.sh
 log=petraCipherJava.log
 
 initialize() {
@@ -11,61 +11,7 @@ initialize() {
     export CLASSPATH=${CLASSPATH}:${currentDir}/PetraCipherAPI.jar:.
 }
 
-getPathToFile() {
-    [ $# -lt "1" ] && exit 1
-    fileName=${1}
-    environmentName=${2:-PATH}
-    includesFileName=${3:-false}
-
-    elementList=$(env | awk -F "=" '{ if ($1=="'"${environmentName}"'") print $2}' | tr ':' '\n')
-
-    hasElement=false
-    for element in ${elementList}; do
-        count=$(find ${element} -name ${fileName} | wc -l)
-        if $includesFileName; then
-            if [ "${fileName}" == "$(basename ${element})" ]; then
-                hasElement=true
-                hasElementPath=${element}
-                break
-            fi
-        else
-            if [ ${count} -ne "0" ]; then
-                hasElement=true
-                hasElementPath=${element}
-                break
-            fi
-        fi
-
-    done
-
-    # return string
-    echo "${hasElementPath}"
-
-    # return code 0:success, 1:failed
-    if $hasElement; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-libraryCheck() {
-    libraryName=libpcjapi.so
-    environmentName=LD_LIBRARY_PATH
-
-    libraryPath=$(getPathToFile ${libraryName} ${environmentName})
-
-    if [ $? -eq "1" ]; then
-        echo "[failed] not found '${libraryName}' library in ${environmentName}"
-        return 1
-    else
-        echo "[OK] Use [ ${libraryName} ] in path [ ${libraryPath} ]"
-    fi
-
-    return 0
-}
-
-javaclassCheck() {
+checkJavaclass() {
     javaclassName=PetraCipherAPI.jar
     makeScript=make_jar.sh
     environmentName=CLASSPATH
@@ -83,7 +29,7 @@ javaclassCheck() {
 
     #Verify that the PetraCipherAPI.jar file is declared in CLASSPATH
     hasClass=false
-    classPath=$(getPathToFile ${javaclassName} ${environmentName} true)
+    classPath=$(whichEnvironment ${javaclassName} ${environmentName} true)
     if [ $? -eq "1" ]; then
         echo "[failed] not found [ ${javaclassName} ] in [ ${environmentName} ]"
         echo ""
@@ -98,10 +44,13 @@ javaclassCheck() {
 main() {
     initialize
 
-    libraryCheck
+    checkLibrary libpcjapi.so
     [ $? -ne "0" ] && exit 0
 
-    javaclassCheck
+    checkJavaclass
+    [ $? -ne "0" ] && exit 0
+
+    checkCipherConfig
     [ $? -ne "0" ] && exit 0
 
 }
