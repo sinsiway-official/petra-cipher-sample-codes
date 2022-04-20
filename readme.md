@@ -68,3 +68,53 @@
 | -30609 | PCC_ERR_KMGR_KEY_STASH_SET_ALREADY | 키 보관 버퍼에 이미 값이 존재함 (키 세팅 실패)                                                                                                                            |
 | -30610 | PCC_ERR_KMGR_CORRUPTED_KEY_STASH   | 키 보관 버퍼의 키가 잘못됨 (EncryptKeySet의 무결성 검사 실패)                                                                                                             |
 | -30701 | PKSS_SESSION_NOT_FOUND             | 키 서버 세션을 찾을 수 없음 (세션 User 또는 Encrypt Column을 찾지 못하거나 현재 키 서버가 User SID 소유자가 아님, 새로운 세션을 open해 UserSID를 다시 발급 받도록 시도함) |
+
+## Petra File Cipher Error Code
+
+| 코드   | 메시지                                  | 정의                                                                                |
+| ------ | --------------------------------------- | ----------------------------------------------------------------------------------- |
+| -66000 | PFC_UNIT_ERR_CODE_CRYPT_UNIT_ERROR      | CryptUnit 수행 실패                                                                 |
+| -66001 | PFC_UNIT_ERR_CODE_GET_ENGINE_FAILED     | 엔진 호출 실패                                                                      |
+| -66002 | PFC_UNIT_ERR_CODE_GET_CRYPTOR_FAILED    | Cryptor 호출 실패                                                                   |
+| -66003 | PFC_UNIT_ERR_CODE_START_READER_FAILED   | Reader 시작 실패                                                                    |
+| -66004 | PFC_UNIT_ERR_CODE_START_CIPHER_FAILED   | Cipher 시작 실패                                                                    |
+| -66005 | PFC_UNIT_ERR_CODE_START_WRITER_FAILED   | Writer 시작 실패                                                                    |
+| -66010 | PFC_RD_ERR_CODE_READER_ERROR            | Reader 수행 실패                                                                    |
+| -66011 | PFC_RD_ERR_CODE_RECV_DATA_FAILED        | Read 중 데이터 수신 실패                                                            |
+| -66012 | PFC_RD_ERR_CODE_FILE_NOT_CLOSED         | 아직 닫히지 않은 파일                                                               |
+| -66020 | PFC_WT_ERR_CODE_WRITER_ERROR            | Writer 수행 실패                                                                    |
+| -66021 | PFC_WT_ERR_CODE_SEND_DATA_FAILED        | Write 중 데이터 송신 실패                                                           |
+| -66030 | PFC_SE_ERR_CODE_SEARCH_ENGINE_ERROR     | 엔진 검색 실패                                                                      |
+| -66031 | PFC_SE_ERR_CODE_DILIMETER_NOT_FOUND     | 구분자가 정의되지 않음                                                              |
+| -66040 | PFC_DVS_ERR_CODE_CRYPT_DIVISION_FAILED  | 알 수 없는 오류가 발생한 경우                                                       |
+| -66041 | PFC_DVS_ERR_CODE_OPEN_IN_FILE_FAILED    | 단일 모드에서 암호화 대상 파일을 열 수 없는 경우 (파일이 존재하지 않거나 권한 부족) |
+| -66042 | PFC_DVS_ERR_CODE_OPEN_OUT_FILE_FAILED   | 단일 모드에서 암호화 결과 파일을 열 수 없는 경우 (권한 부족 등)                     |
+| -66043 | PFC_DVS_ERR_CODE_ZERO_FILE_SIZE         | 암호화 대상 파일 사이즈가 0                                                         |
+| -66044 | PFC_DVS_ERR_CODE_CHECK_HEADER_FAILED    | 암호화 파일의 헤더를 확인하던 중 알 수 없는 오류가 발생한 경우                      |
+| -66045 | PFC_DVS_ERR_CODE_ALREADY_ENCRYPTED      | 이미 암호화 된 파일을 다시 암호화하려고 한 경우                                     |
+| -66046 | PFC_DVS_ERR_CODE_BROKEN_FILE            | 암호화 파일의 헤더가 손상된 경우                                                    |
+| -66047 | PFC_DVS_ERR_CODE_ORIGINAL_FILE          | 암호화 되지 않은 파일을 복호화 하려고 하는 경우                                     |
+| -66048 | PFC_DVS_ERR_CODE_WRITE_HEADER_FAILED    | 암호화 결과 파일의 헤더를 작성하던 중 오류가 발생한 경우                            |
+| -66049 | PFC_DVS_ERR_CODE_COMMIT_HEADER_FAILED   | 암호화 결과 파일의 헤더에 대한 해시를 작성하던 중 오류가 발생한 경우                |
+| -66050 | PFC_DVS_ERR_CODE_INCOMPLETE_ENCRYPTION  | 불완전한 암호화 현재 사용되지 않음                                                  |
+| -66051 | PFC_DVS_ERR_CODE_INCOMPLETE_DECRYPTION  | 불완전한 복호화 현재 사용되지 않음                                                  |
+| -66052 | PFC_DVS_ERR_CODE_OPEN_FSPLITER_FAILED   | 다중 모드에서 암호화 대상 파일을 열 수 없는 경우 (파일이 존재하지 않거나 권한 부족) |
+| -66053 | PFC_DVS_ERR_CODE_OPEN_FMERGER_FAILED    | 다중 모드에서 암호화 결과 파일을 열 수 없는 경우 (권한 부족 등)                     |
+| -66054 | PFC_DVS_ERR_CODE_GET_RUN_FAILED         | 다중 모드에서 암호화 대상 파일을 불러오던 중 오류가 발생한 경우                     |
+| -66055 | PFC_DVS_ERR_CODE_FSTREAM_NOT_ALLOCATED  | 다중 모드에서 작업 대상 파일의 파일스트림이 할당되지 않은 경우                      |
+| -66056 | PFC_DVS_ERR_CODE_START_CRYPT_UNIT_FALED | 다중 모드에서 암호화 유닛을 시작하던 중 오류가 발생한 경우                          |
+| -66057 | PFC_DVS_ERR_CODE_OUT_FILE_ALREADY_EXIST | 작업 결과 파일을 열 수 없는 경우 (파일이 이미 존재하는 경우)                        |
+| -66100 | PFC_FC_ERR_CODE_FILE_CRYPTOR_ERROR      | 알 수 없는 오류가 발생한 경우                                                       |
+| -66101 | PFC_FC_ERR_CODE_OPEN_LOG_FILE_FAILED    | 로그 파일 오픈 실패                                                                 |
+| -66102 | PFC_FC_ERR_CODE_KEY_COL_NOT_DEFINED     | 파라미터에서 키 컬럼이 정의되지 않은 경우                                           |
+| -66103 | PFC_FC_ERR_CODE_KEY_NAME_NOT_DEFINED    | 파라미터에서 키 이름이 정의되지 않은 경우                                           |
+| -66104 | PFC_FC_ERR_CODE_UNSUPPORTED_PARAM       | 지원하지 않는 파라미터인 경우                                                       |
+| -66105 | PFC_FC_ERR_CODE_INVALID_PARAML_FORMAT   | 파라미터 리스트의 포맷이 유효하지 않은 경우                                         |
+| -66106 | PFC_FC_ERR_CODE_BUILD_PARAML_FAILED     | 파라미터 리스트를 빌딩하던 중 오류가 발생한 경우                                    |
+| -66107 | PFC_FC_ERR_CODE_BUILD_PARAMF_FAILED     | 파라미터 파일 빌드 실패                                                             |
+| -66108 | PFC_FC_ERR_CODE_IN_FILE_NOT_DEFINED     | 암호화 대상 파일 미정의                                                             |
+| -66109 | PFC_FC_ERR_CODE_GET_API_SESSION_FAILED  | 키 서버 세션을 가져오지 못하는 경우                                                 |
+| -66110 | PFC_FC_ERR_CODE_OPEN_IN_FILE_FAILED     | 작업 대상 파일을 열 수 없는 경우                                                    |
+| -66111 | PFC_FC_ERR_CODE_NO_PRIV_BY_SIZE_CTRL    | 크기 제어에 대한 권한이 없는 경우                                                   |
+| -66112 | PFC_FC_ERR_CODE_IN_FILE_OUT_FILE_SAME   | 작업 대상 파일과 작업 결과 파일이 동일한 경우                                       |
+| -66113 | PFC_FC_ERR_CODE_UNSUPPORTED_FILE_FORMAT | 지원하지 않는 파일 포맷인 경우 (탐지 제외 항목인 경우)                              |
