@@ -63,7 +63,16 @@ checkLibrary() {
     return 0
 }
 
-checkCipherConfig() {
+# checkCipherConfig() {
+#     hasConfig=false
 
-    return 0
-}
+#     [ -f "/var/tmp/.petra/petra_cipher_api.conf" ] && hasConfig=true && configLocation=/var/tmp/.petra/petra_cipher_api.conf
+#     [ -f "./petra_cipher_api.conf" ] && hasConfig=true && configLocation=./petra_cipher_api.conf
+#     [ -f "../petra_cipher_api.conf" ] && hasConfig=true && configLocation=../petra_cipher_api.conf
+
+#     if $hasConfig; then
+#         return 0
+#     else
+#         return 1
+#     fi
+# }

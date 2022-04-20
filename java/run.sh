@@ -41,6 +41,24 @@ checkJavaclass() {
     return 0
 }
 
+build() {
+    javac -cp ${CLASSPATH} PetraApiJavaDemo.java
+    [ ! -f "PetraApiJavaDemo.class" ] && return 1 && echo "[Fail] build failed."
+    echo "[OK] build complete"
+    return 0
+}
+
+run() {
+    echo ""
+    echo "[ Begin ]===================================================="
+    echo ""
+    java PetraApiJavaDemo
+    [ -f "PetraApiJavaDemo.class" ] && rm -rf PetraApiJavaDemo.class
+    echo ""
+    echo "=======================================================[ End ]"
+    echo ""
+}
+
 main() {
     initialize
 
@@ -50,9 +68,10 @@ main() {
     checkJavaclass
     [ $? -ne "0" ] && exit 0
 
-    checkCipherConfig
+    build
     [ $? -ne "0" ] && exit 0
 
+    run
 }
 
 main
