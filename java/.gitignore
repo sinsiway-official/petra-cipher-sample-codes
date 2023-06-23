@@ -2,3 +2,5 @@ PetraCipherAPI.jar
 *.class
 *.so
 *.log
+dummy
+.vscode

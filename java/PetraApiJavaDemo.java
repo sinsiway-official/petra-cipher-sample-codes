@@ -14,7 +14,7 @@ public class PetraApiJavaDemo {
       String decryptString = new String();
 
       int keyId = 10;
-      String keyName = new String("ARIA_256_b64");
+      String keyName = new String("ARIA_256_B64");
 
       // case 01 : use key id
       String plainString = new String("Believe in yourself.");
